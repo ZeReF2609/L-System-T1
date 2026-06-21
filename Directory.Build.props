@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <GlewIncludeDir>$(SolutionDir)dependencias glew y glfw\GLEW\include</GlewIncludeDir>
+    <GlfwIncludeDir>$(SolutionDir)dependencias glew y glfw\GLFW\include</GlfwIncludeDir>
+    <GlewLibDir>$(SolutionDir)dependencias glew y glfw\GLEW\lib\Release\$(Platform)</GlewLibDir>
+    <GlfwLibDir>$(SolutionDir)dependencias glew y glfw\GLFW\lib</GlfwLibDir>
+  </PropertyGroup>
+</Project>
