@@ -185,33 +185,17 @@ std::vector<float> generateSkyGradient() {
     return v;
 }
 
-std::vector<float> generateSunGlow(float cx, float cy, float radius) {
-    std::vector<float> v;
-    int segs = 40;
-    v.push_back(cx); v.push_back(cy); v.push_back(0.f);
-    v.push_back(0.55f); v.push_back(0.72f); v.push_back(0.60f);
-    for (int i = 0; i <= segs; i++) {
-        float a = (float)i / segs * 2.f * 3.14159265f;
-        v.push_back(cx + radius * std::cos(a));
-        v.push_back(cy + radius * std::sin(a));
-        v.push_back(0.f);
-        v.push_back(0.40f); v.push_back(0.60f); v.push_back(0.48f);
-    }
-    return v;
-}
-
 std::vector<float> generateSunDisk(float cx, float cy, float radius) {
     std::vector<float> v;
-    int segs = 40;
+    int segs = 48;
     v.push_back(cx); v.push_back(cy); v.push_back(0.f);
-    v.push_back(1.0f); v.push_back(0.95f); v.push_back(0.40f);
+    v.push_back(1.0f); v.push_back(0.95f); v.push_back(0.55f);
     for (int i = 0; i <= segs; i++) {
         float a = (float)i / segs * 2.f * 3.14159265f;
-        float bright = 1.0f - 0.12f * std::abs(std::sin(a * 2.f));
         v.push_back(cx + radius * std::cos(a));
         v.push_back(cy + radius * std::sin(a));
         v.push_back(0.f);
-        v.push_back(1.0f * bright); v.push_back(0.90f * bright); v.push_back(0.35f * bright);
+        v.push_back(1.0f); v.push_back(0.85f); v.push_back(0.30f);
     }
     return v;
 }
@@ -221,14 +205,14 @@ std::vector<float> generateSunRays(float cx, float cy, float radius) {
     std::vector<float> v;
     for (int i = 0; i < 12; i++) {
         float a = (float)i / 12.f * 2.f * 3.14159265f;
-        float ix = cx + radius * 1.15f * std::cos(a);
-        float iy = cy + radius * 1.15f * std::sin(a);
-        float ox = cx + radius * 2.0f * std::cos(a);
-        float oy = cy + radius * 2.0f * std::sin(a);
+        float ix = cx + radius * 1.2f * std::cos(a);
+        float iy = cy + radius * 1.2f * std::sin(a);
+        float ox = cx + radius * 2.2f * std::cos(a);
+        float oy = cy + radius * 2.2f * std::sin(a);
         v.push_back(ix); v.push_back(iy); v.push_back(0.f);
-        v.push_back(0.95f); v.push_back(0.80f); v.push_back(0.25f);
+        v.push_back(1.0f); v.push_back(0.80f); v.push_back(0.30f);
         v.push_back(ox); v.push_back(oy); v.push_back(0.f);
-        v.push_back(0.75f); v.push_back(0.60f); v.push_back(0.15f);
+        v.push_back(0.70f); v.push_back(0.55f); v.push_back(0.15f);
     }
     return v;
 }
@@ -307,17 +291,13 @@ int main()
     }
 
     // ── Fondo (triángulos, estático) ───────────────────────
-    auto skyV = generateSkyGradient();          // GL_TRIANGLE_STRIP
-    auto glowV = generateSunGlow(0.55f, 0.68f, 0.15f); // GL_TRIANGLE_FAN
+    auto skyV = generateSkyGradient();                 // GL_TRIANGLE_STRIP
     auto diskV = generateSunDisk(0.55f, 0.68f, 0.07f); // GL_TRIANGLE_FAN
 
     std::vector<float> bgVerts;
     bgVerts.insert(bgVerts.end(), skyV.begin(), skyV.end());
     int skyCount = (int)skyV.size() / 6;
-    int glowStart = skyCount;
-    bgVerts.insert(bgVerts.end(), glowV.begin(), glowV.end());
-    int glowCount = (int)glowV.size() / 6;
-    int diskStart = glowStart + glowCount;
+    int diskStart = skyCount;
     bgVerts.insert(bgVerts.end(), diskV.begin(), diskV.end());
     int diskCount = (int)diskV.size() / 6;
 
@@ -365,7 +345,6 @@ int main()
 
         glBindVertexArray(bgVAO);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, skyCount);
-        glDrawArrays(GL_TRIANGLE_FAN, glowStart, glowCount);
         glDrawArrays(GL_TRIANGLE_FAN, diskStart, diskCount);
 
         // ── 2) Líneas dinámicas ───
